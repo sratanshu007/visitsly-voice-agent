@@ -141,55 +141,26 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 Check health: `http://localhost:8000/health`  
 Interactive Swagger docs: `http://localhost:8000/docs`
 
-### 4. Test Calling Your Phone Live
+### 4. Dispatch Outbound Call via API
+To queue an outbound confirmation call for a lead:
 ```bash
-python call_my_phone.py +919876543210
+curl -X POST "http://localhost:8000/api/bookings/confirmed" \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: visitsly_secret_booking_key_2026" \
+  -d '{
+    "booking_id": "booking-test-101",
+    "customer_name": "Rahul Sharma",
+    "phone": "+919876543210",
+    "property_name": "Godrej Woods Sector 43",
+    "visit_datetime": "2026-11-08 16:00",
+    "language": "hi",
+    "consent": {
+      "given": true,
+      "text": "User consented to receive site-visit confirmation call"
+    }
+  }'
 ```
-This dispatches an outbound call through your configured Plivo account and dials your mobile phone live!
-
----
-
-## 🧪 Local Call Simulator (No Plivo Needed)
-
-You can test the entire conversation flow, Hindi date parsing, tool calls, and audio synthesis in your terminal without using phone credits:
-
-```bash
-python simulate_call.py
-```
-
-**Simulation Session Example:**
-```
-======================================================================
-  VISITSLY AI VOICE AGENT - LOCAL CALL SIMULATOR (NO PLIVO REQUIRED)
-======================================================================
-Active LLM: GROQ
-Active TTS: EDGE_TTS
-Active STT: GROQ
-
-[Call Connected!]
-AI Agent: Namaste Rahul Sharma ji, main Visitsly ki taraf se baat kar raha hoon,
-ek automated assistant. Aapne Godrej Woods Phase 2 ki site visit Kal subah 11:00 AM
-ke liye book ki hai. Kya ye time aapke liye theek hai?
-
-----------------------------------------------------------------------
-You (Rahul Sharma): Nahi, kal nahi ho payega. Sunday ko shaam 5 baje chalega?
-
-AI Agent: Ji bilkul, humne aapki site visit Sunday shaam 05:00 PM (08 November 2026)
-ke liye reschedule kar di hai. Kya aapko kuch aur poochna hai?
-
-[Turn 2 Latency] Total: 412ms | STT: 85ms | LLM TTFT: 198ms | TTS TTFB: 129ms
-
-----------------------------------------------------------------------
-You (Rahul Sharma): Nahi, bas yahi theek hai.
-
-AI Agent: Bahut accha ji. Hamari team aapka intazaar karegi. Dhanyavaad!
-
-[TOOL CALLED: finalize_call]
-   Outcome: RESCHEDULED
-   New Datetime: Sunday 05:00 PM (08 November 2026)
-   Notes: Customer rescheduled to Sunday evening
-[Call Finalized Successfully!]
-```
+This validates consent, checks the calling window (09:00 - 21:00 IST), and automatically initiates the live AI voice call via Plivo!
 
 ---
 

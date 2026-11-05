@@ -42,7 +42,7 @@ class Settings(BaseSettings):
     MAX_SILENCE_PROMPTS: int = 2
 
     # SaaS Webhook
-    SAAS_WEBHOOK_URL: str = "http://localhost:3000/api/webhooks/voice/test"
+    SAAS_WEBHOOK_URL: str = "http://localhost:3000/api/webhooks/voice/result"
     SAAS_WEBHOOK_SECRET: str = "visitsly_webhook_hmac_secret_key_32chars"
 
     # Providers
